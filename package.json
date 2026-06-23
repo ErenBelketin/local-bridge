@@ -10,9 +10,9 @@
     ]
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
-    "build-exe": "node make_ico.js && pkg . --targets node18-win-x64 --output local-bridge.exe && node set_icon.js"
+    "start": "go run main.go",
+    "dev": "go run main.go",
+    "build-exe": "windres -o resource.syso resource.rc && go build -ldflags \"-s -w\" -o local-bridge.exe"
   },
   "dependencies": {
     "cors": "^2.8.5",

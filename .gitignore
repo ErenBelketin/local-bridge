@@ -18,3 +18,5 @@ Thumbs.db
 # Compiled and built assets
 *.exe
 *.ico
+*.syso
+

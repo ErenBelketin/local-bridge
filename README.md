@@ -13,11 +13,10 @@ Apple ekosistemi (Airdrop) olmayan kullanıcılar için, bilgisayarlar ve mobil 
 ---
 
 ## 🚀 Nasıl Çalıştırılır?
-1. Bilgisayarınızda **Node.js** yüklü olduğundan emin olun (Önerilen: v18+).
-2. Proje dizinindeki `start.bat` dosyasına çift tıklayarak sunucuyu başlatın (ya da terminalde `npm start` yazın).
-3. Bilgisayar ekranınızda veya konsolda çıkan adresi görün.
-4. Telefonunuzun kamerası ile ekrandaki QR kodu okutun.
-5. Paylaşımların tadını çıkarın!
+1. Proje dizinindeki `start.bat` veya `launch.bat` dosyasına çift tıklayarak sunucuyu başlatın (Natif Go yürütülebilir dosyası `local-bridge.exe` arka planda ayağa kalkar).
+2. Bilgisayar ekranınızda veya konsolda çıkan adresi görün.
+3. Telefonunuzun kamerası ile ekrandaki QR kodu okutun.
+4. Paylaşımların tadını çıkarın!
 
 ---
 
