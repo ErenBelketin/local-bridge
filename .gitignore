@@ -14,3 +14,7 @@ Thumbs.db
 .vs/
 .vscode/
 *.log
+
+# Compiled and built assets
+*.exe
+*.ico
