@@ -1,0 +1,16 @@
+# Node dependencies
+node_modules/
+
+# Local database containing user shared clips
+db.json
+
+# Local file uploads
+uploads/*
+!uploads/.gitkeep
+
+# System and editor files
+.DS_Store
+Thumbs.db
+.vs/
+.vscode/
+*.log

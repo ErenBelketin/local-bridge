@@ -1,0 +1,18 @@
+{
+  "name": "Local-Bridge",
+  "short_name": "LocalBridge",
+  "description": "Cihazlar Arası Kablosuz Dosya ve Pano Paylaşımı (Kendine WhatsApp'tan Mesaj Atma Derdine Son)",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#2563eb",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

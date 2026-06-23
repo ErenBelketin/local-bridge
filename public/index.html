@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local-Bridge | Kablosuz Hızlı Paylaşım</title>
+  <meta name="description" content="Local-Bridge - WhatsApp'tan kendine mesaj atma derdine son! Bilgisayar ve telefon arasında Wi-Fi üzerinden saniyeler içinde kablosuz dosya ve pano paylaşımı.">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Client-side QRCode Generator -->
+  <script src="qrcode.min.js"></script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body class="dark-mode">
+
+  <div class="app-container">
+    
+    <!-- Sidebar / Server Info & QR Code -->
+    <aside class="sidebar">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <i class="fa-solid fa-circle-nodes"></i>
+        </div>
+        <div class="logo-text">
+          <h1>Local-Bridge</h1>
+          <span class="logo-subtitle">Cihazlar Arası Köprü</span>
+        </div>
+      </div>
+      
+      <!-- Connection QR Code Section -->
+      <div class="qr-card">
+        <div class="qr-header">
+          <h3><i class="fa-solid fa-qrcode"></i> Telefona Bağlan</h3>
+          <span class="badge badge-success">Yerel Ağ</span>
+        </div>
+        <p class="qr-description">Telefonunuzun kamerasıyla bu QR kodu taratarak doğrudan bu sayfaya bağlanın. Kablosuz ve internet kotanızı harcamadan transfer yapın.</p>
+        
+        <div class="qr-container-wrapper">
+          <div id="qrcode" class="qrcode-box"></div>
+        </div>
+        
+        <div class="ip-select-wrapper">
+          <label for="ipSelect">Bağlantı Adresi:</label>
+          <div class="ip-selector">
+            <select id="ipSelect" class="ip-dropdown"></select>
+            <button id="copyUrlBtn" class="btn btn-icon" title="Adresi Kopyala">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Server Statistics -->
+      <div class="stats-panel">
+        <h4><i class="fa-solid fa-server"></i> Sunucu Durumu</h4>
+        <div class="stat-row">
+          <span class="stat-label">Durum:</span>
+          <span class="stat-value" id="statusBadge"><span class="pulse-dot"></span> Bağlı</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Cihaz Sayısı:</span>
+          <span class="stat-value" id="clientCount">1 aktif cihaz</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Toplam Paylaşım:</span>
+          <span class="stat-value" id="totalItemsCount">0 öge</span>
+        </div>
+      </div>
+
+      <!-- Quick Info / User Guide -->
+      <div class="info-card">
+        <h4><i class="fa-solid fa-circle-info"></i> İpucu</h4>
+        <p>Sayfanın herhangi bir yerinde <kbd>Ctrl</kbd> + <kbd>V</kbd> kısayolu ile panonuzdaki metinleri veya dosyaları anında paylaşabilirsiniz.</p>
+      </div>
+
+      <div class="sidebar-footer">
+        <p>Local-Bridge &copy; 2026</p>
+        <span class="badge badge-outline">Ultra Optimize</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Navbar -->
+      <header class="navbar">
+        <div class="nav-title">
+          <h2>Dosya & Pano Paylaşımı</h2>
+          <span id="headerConnectionText" class="connection-status">Arama bekleniyor...</span>
+        </div>
+        <div class="nav-actions">
+          <button id="themeToggle" class="btn btn-icon" title="Tema Değiştir">
+            <i class="fa-solid fa-sun"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Input Section / Sharing Bridge -->
+      <section class="bridge-input-card">
+        <div class="tab-header">
+          <button class="tab-btn active" data-tab="textTab">
+            <i class="fa-solid fa-align-left"></i> Metin Paylaş
+          </button>
+          <button class="tab-btn" data-tab="linkTab">
+            <i class="fa-solid fa-link"></i> Bağlantı Paylaş
+          </button>
+          <button class="tab-btn" data-tab="fileTab">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Dosya Gönder
+          </button>
+        </div>
+
+        <div class="tab-content">
+          <!-- Text Tab -->
+          <div class="tab-pane active" id="textTab">
+            <form id="textForm">
+              <div class="input-group">
+                <textarea id="textInput" placeholder="Paylaşmak istediğiniz metni veya notu buraya yazın ya da yapıştırın..." rows="4" required></textarea>
+              </div>
+              <div class="input-actions">
+                <div class="color-picker-wrapper">
+                  <span class="picker-label">Kart Rengi:</span>
+                  <div class="color-dots">
+                    <button type="button" class="color-dot" data-color="#7c3aed" style="background-color: #7c3aed;" aria-label="Mor"></button>
+                    <button type="button" class="color-dot active" data-color="#2563eb" style="background-color: #2563eb;" aria-label="Mavi"></button>
+                    <button type="button" class="color-dot" data-color="#0d9488" style="background-color: #0d9488;" aria-label="Teal"></button>
+                    <button type="button" class="color-dot" data-color="#16a34a" style="background-color: #16a34a;" aria-label="Yeşil"></button>
+                    <button type="button" class="color-dot" data-color="#ca8a04" style="background-color: #ca8a04;" aria-label="Sarı"></button>
+                    <button type="button" class="color-dot" data-color="#dc2626" style="background-color: #dc2626;" aria-label="Kırmızı"></button>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa-regular fa-paper-plane"></i> Gönder
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Link Tab -->
+          <div class="tab-pane" id="linkTab">
+            <form id="linkForm">
+              <div class="input-group">
+                <input type="url" id="linkInput" placeholder="Paylaşmak istediğiniz bağlantıyı (URL) yapıştırın... (https://...)" required>
+              </div>
+              <div class="input-group" style="margin-top: 12px;">
+                <input type="text" id="linkTitleInput" placeholder="Bağlantı başlığı (isteğe bağlı)">
+              </div>
+              <div class="input-actions">
+                <div class="color-picker-wrapper">
+                  <span class="picker-label">Kart Rengi:</span>
+                  <div class="color-dots">
+                    <button type="button" class="color-dot" data-color="#7c3aed" style="background-color: #7c3aed;" aria-label="Mor"></button>
+                    <button type="button" class="color-dot active" data-color="#2563eb" style="background-color: #2563eb;" aria-label="Mavi"></button>
+                    <button type="button" class="color-dot" data-color="#0d9488" style="background-color: #0d9488;" aria-label="Teal"></button>
+                    <button type="button" class="color-dot" data-color="#16a34a" style="background-color: #16a34a;" aria-label="Yeşil"></button>
+                    <button type="button" class="color-dot" data-color="#ca8a04" style="background-color: #ca8a04;" aria-label="Sarı"></button>
+                    <button type="button" class="color-dot" data-color="#dc2626" style="background-color: #dc2626;" aria-label="Kırmızı"></button>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fa-regular fa-paper-plane"></i> Gönder
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- File Tab -->
+          <div class="tab-pane" id="fileTab">
+            <div id="dropZone" class="drop-zone">
+              <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+              <p class="drop-text">Dosyaları buraya sürükleyin veya <span>göz atın</span></p>
+              <p class="drop-subtext">Fotoğraf, video veya herhangi bir dosya (Maks: 500 MB)</p>
+              <input type="file" id="fileInput" multiple hidden>
+            </div>
+
+            <!-- Selected Files List -->
+            <div id="selectedFilesList" class="selected-files-list hidden"></div>
+
+            <!-- Input Actions for File tab -->
+            <div class="input-actions" style="margin-top: 14px;">
+              <div class="color-picker-wrapper">
+                <span class="picker-label">Kart Rengi:</span>
+                <div class="color-dots">
+                  <button type="button" class="color-dot active" data-color="#2563eb" style="background-color: #2563eb;" aria-label="Mavi"></button>
+                  <button type="button" class="color-dot" data-color="#7c3aed" style="background-color: #7c3aed;" aria-label="Mor"></button>
+                  <button type="button" class="color-dot" data-color="#0d9488" style="background-color: #0d9488;" aria-label="Teal"></button>
+                  <button type="button" class="color-dot" data-color="#16a34a" style="background-color: #16a34a;" aria-label="Yeşil"></button>
+                  <button type="button" class="color-dot" data-color="#ca8a04" style="background-color: #ca8a04;" aria-label="Sarı"></button>
+                  <button type="button" class="color-dot" data-color="#dc2626" style="background-color: #dc2626;" aria-label="Kırmızı"></button>
+                </div>
+              </div>
+              <button type="button" id="uploadBtn" class="btn btn-primary" disabled>
+                <i class="fa-regular fa-paper-plane"></i> Gönder
+              </button>
+            </div>
+            
+            <!-- Uploading Queue (Visible during uploads) -->
+            <div id="uploadProgressContainer" class="upload-progress-container hidden">
+              <div class="progress-info">
+                <span class="progress-title"><i class="fa-solid fa-spinner fa-spin"></i> Dosyalar yükleniyor...</span>
+                <span id="progressPercentage" class="progress-percentage">0%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div id="uploadProgressBar" class="progress-bar" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search & Filters -->
+      <section class="toolbar">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="searchInput" placeholder="Ögelerde ara...">
+        </div>
+        <div class="filter-group">
+          <button class="filter-btn active" data-filter="all">Tümü</button>
+          <button class="filter-btn" data-filter="text">Metinler</button>
+          <button class="filter-btn" data-filter="link">Bağlantılar</button>
+          <button class="filter-btn" data-filter="file">Dosyalar</button>
+        </div>
+      </section>
+
+      <!-- Items Grid -->
+      <section class="items-grid-container">
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state">
+          <div class="empty-icon">
+            <i class="fa-regular fa-clipboard"></i>
+          </div>
+          <h3>Henüz bir paylaşım yok</h3>
+          <p>Telefonunuzdan veya bu bilgisayardan metin ekleyin ya da dosya sürükleyip bırakın.</p>
+        </div>
+
+        <!-- Real items list -->
+        <div id="itemsGrid" class="items-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Fullscreen Modal for Text viewing / Image Previewing -->
+  <div id="previewModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Detay</h3>
+        <button id="modalCloseBtn" class="btn btn-icon modal-close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Dynimcally filled -->
+      </div>
+      <div class="modal-footer" id="modalFooter">
+        <!-- Dynamically filled -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
