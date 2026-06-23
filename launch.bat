@@ -8,7 +8,7 @@ if %errorlevel% equ 0 (
     echo [Local-Bridge] Sunucu zaten arka planda calisiyor...
 ) else (
     echo [Local-Bridge] Sunucu baslatiliyor...
-    start "Local-Bridge Sunucusu" cmd /k "node server.js"
+    start "Local-Bridge Sunucusu" cmd /k "local-bridge.exe"
     :: Give the server 2 seconds to initialize
     timeout /t 2 /nobreak >nul
 )

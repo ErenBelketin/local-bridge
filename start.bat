@@ -1,11 +1,10 @@
 @echo off
 title Local-Bridge Sunucusu
+echo [LOCAL-BRIDGE] Sunucu baslatiliyor (Executable)...
 echo ==================================================
-echo [LOCAL-BRIDGE] Sunucu baslatiliyor...
-echo ==================================================
-node server.js
+local-bridge.exe
 if %errorlevel% neq 0 (
     echo.
-    echo Sunucu baslatilamadi. Lutfen Node.js'in yuklu oldugundan emin olun.
+    echo Sunucu baslatilamadi. Lutfen local-bridge.exe dosyasinin mevcut oldugundan emin olun.
     pause
 )
