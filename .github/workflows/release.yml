@@ -15,42 +15,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
-          node-version: 18
-          cache: 'npm'
+          go-version: '1.26.x'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Compile Resource Icon
+        run: windres -o resource.syso resource.rc
 
-
-      - name: Download rcedit
-        run: curl -L -o rcedit.exe https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe
-
-      - name: Compile Executable First Pass (to download base binary)
-        run: npx pkg . --targets node18-win-x64 --output local-bridge.exe
-
-      - name: Patch cached base binary
-        shell: pwsh
-        run: |
-          $cacheDir = "$env:USERPROFILE\.pkg-cache"
-          $binaries = Get-ChildItem -Path $cacheDir -Filter fetched-* -Recurse -ErrorAction SilentlyContinue
-          if ($binaries.Count -eq 0) {
-            Write-Host "No binaries found in cache."
-            exit 1
-          }
-          foreach ($bin in $binaries) {
-            $builtPath = Join-Path $bin.DirectoryName $bin.Name.Replace("fetched-", "built-")
-            if (-not (Test-Path $builtPath)) {
-              Copy-Item $bin.FullName $builtPath -Force
-              Write-Host "Patching $builtPath with icon..."
-              .\rcedit.exe $builtPath --set-icon app_icon.ico
-            }
-          }
-
-      - name: Compile Executable Second Pass (with icon)
-        run: npx pkg . --targets node18-win-x64 --output local-bridge.exe
+      - name: Build Executable
+        run: go build -ldflags "-s -w" -o local-bridge.exe
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
