@@ -27,11 +27,11 @@ jobs:
       - name: Generate ICO
         run: node make_ico.js
 
-      - name: Pre-fetch pkg base binary
-        run: npx pkg-fetch -t node18-win-x64
-
       - name: Download rcedit
         run: curl -L -o rcedit.exe https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe
+
+      - name: Compile Executable First Pass (to download base binary)
+        run: npx pkg . --targets node18-win-x64 --output local-bridge.exe
 
       - name: Patch cached base binary
         shell: pwsh
@@ -44,12 +44,14 @@ jobs:
           }
           foreach ($bin in $binaries) {
             $builtPath = Join-Path $bin.DirectoryName $bin.Name.Replace("fetched-", "built-")
-            Copy-Item $bin.FullName $builtPath -Force
-            Write-Host "Patching $builtPath with icon..."
-            .\rcedit.exe $builtPath --set-icon app_icon.ico
+            if (-not (Test-Path $builtPath)) {
+              Copy-Item $bin.FullName $builtPath -Force
+              Write-Host "Patching $builtPath with icon..."
+              .\rcedit.exe $builtPath --set-icon app_icon.ico
+            }
           }
 
-      - name: Compile Executable
+      - name: Compile Executable Second Pass (with icon)
         run: npx pkg . --targets node18-win-x64 --output local-bridge.exe
 
       - name: Create Release
