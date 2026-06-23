@@ -1,18 +1,17 @@
-import express from 'express';
-import multer from 'multer';
-import cors from 'cors';
-import path from 'path';
-import fs from 'fs/promises';
-import { existsSync } from 'fs';
-import os from 'os';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const express = require('express');
+const multer = require('multer');
+const cors = require('cors');
+const path = require('path');
+const fs = require('fs').promises;
+const { existsSync } = require('fs');
+const os = require('os');
 
 const PORT = 3000;
-const DB_FILE = path.join(__dirname, 'db.json');
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
+const isPkg = typeof process.pkg !== 'undefined';
+const baseDir = isPkg ? path.dirname(process.execPath) : __dirname;
+
+const DB_FILE = path.join(baseDir, 'db.json');
+const UPLOADS_DIR = path.join(baseDir, 'uploads');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 // Initialize directories and database file
@@ -32,14 +31,12 @@ async function initStorage() {
   }
 }
 
-await initStorage();
-
 // Load / Save DB helpers
 async function readDB() {
   try {
     const data = await fs.readFile(DB_FILE, 'utf-8');
     return JSON.parse(data);
-  } catch {
+  } catch (err) {
     return [];
   }
 }
@@ -147,7 +144,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(PUBLIC_DIR));
 app.use('/files', express.static(UPLOADS_DIR));
 
-// SSE clients storage
 let clients = [];
 
 // Broadcast data to all connected SSE clients
@@ -164,7 +160,6 @@ app.get('/api/events', (req, res) => {
     'Connection': 'keep-alive',
   });
 
-  // Keep connection alive with comment line every 30 seconds
   res.write(': keep-alive\n\n');
 
   const clientId = Date.now();
@@ -176,18 +171,15 @@ app.get('/api/events', (req, res) => {
   });
 });
 
-// Configure Multer for disk storage - streaming files straight to disk
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, UPLOADS_DIR);
   },
   filename: (req, file, cb) => {
-    // Decode original name properly if it contains Turkish characters or UTF-8 encodings
     const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const ext = path.extname(originalName);
     const nameWithoutExt = path.basename(originalName, ext);
-    // Keep it clean and avoid name collisions
     cb(null, `${nameWithoutExt}-${uniqueSuffix}${ext}`);
   }
 });
@@ -362,14 +354,19 @@ app.get('/api/info', (req, res) => {
   });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  const ips = getLocalIPs();
-  console.log('==================================================');
-  console.log('🚀 LOCAL-BRIDGE SERVER STARTED SUCCESSFULLY!');
-  console.log(`💻 Local Access: http://localhost:${PORT}`);
-  console.log('📱 Scan QR code on local devices to connect:');
-  ips.forEach(ip => {
-    console.log(`   👉 http://${ip}:${PORT}`);
+// Run storage initialization and listen inside async wrapper (CommonJS compliance)
+(async () => {
+  await initStorage();
+  
+  app.listen(PORT, '0.0.0.0', () => {
+    const ips = getLocalIPs();
+    console.log('==================================================');
+    console.log('🚀 LOCAL-BRIDGE SERVER STARTED SUCCESSFULLY!');
+    console.log(`💻 Local Access: http://localhost:${PORT}`);
+    console.log('📱 Scan QR code on local devices to connect:');
+    ips.forEach(ip => {
+      console.log(`   👉 http://${ip}:${PORT}`);
+    });
+    console.log('==================================================');
   });
-  console.log('==================================================');
-});
+})();

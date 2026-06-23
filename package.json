@@ -3,10 +3,16 @@
   "version": "1.0.0",
   "description": "Local Clipboard and File Sharing Bridge (Kendine WhatsApp'tan Mesaj Atma Derdine Son)",
   "main": "server.js",
-  "type": "module",
+  "bin": "server.js",
+  "pkg": {
+    "assets": [
+      "public/**/*"
+    ]
+  },
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build-exe": "pkg . --targets node18-win-x64 --output local-bridge.exe"
   },
   "dependencies": {
     "cors": "^2.8.5",
