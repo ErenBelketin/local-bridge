@@ -37,5 +37,15 @@ jobs:
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
+          body: |
+            ### 🌐 Local-Bridge (Cihazlar Arası Kablosuz Dosya ve Pano Paylaşımı)
+            
+            Bu sürüm, Node.js bağımlılığını tamamen ortadan kaldıran ve Windows görev çubuğu/özellikler simgesi ile meta verilerini (açıklama, versiyon vb.) düzgün bir şekilde tanımlayan natif Go versiyonudur.
+            
+            #### ⚡ Özellikler ve Yenilikler:
+            - **Sıfır Kurulum (Telefonda):** Bilgisayarda çalışan sunucu size bir QR kod üretir. Telefonun kamerasıyla bu kodu tarattığınız anda telefonunuzda paylaşım sayfası açılır.
+            - **Yerel ve Kotasız:** Tüm dosya transferleri internete çıkmadan, doğrudan yerel ağınız (Wi-Fi) üzerinden gerçekleşir.
+            - **Natif Go Geliştirmesi:** Node.js gereksinimi kaldırıldı ve Windows görev çubuğunda Node.js logosu yerine kendi simgesiyle çalışması sağlandı.
+            - **Uygulama Bilgileri Eklendi:** Windows yürütülebilir dosyasına (`local-bridge.exe`) Dosya Açıklaması, Telif Hakkı, Şirket İsmi ve Sürüm Numarası gömüldü.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
