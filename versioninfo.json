@@ -1,0 +1,39 @@
+{
+	"FixedFileInfo": {
+		"FileVersion": {
+			"Major": 1,
+			"Minor": 2,
+			"Patch": 1,
+			"Build": 0
+		},
+		"ProductVersion": {
+			"Major": 1,
+			"Minor": 2,
+			"Patch": 1,
+			"Build": 0
+		},
+		"FileFlagsMask": "3f",
+		"FileFlags ": "00",
+		"FileOS": "040004",
+		"FileType": "01",
+		"FileSubtype": "00"
+	},
+	"StringFileInfo": {
+		"CompanyName": "Eren Belketin",
+		"FileDescription": "Local Clipboard and File Sharing Bridge",
+		"FileVersion": "1.2.1.0",
+		"InternalName": "local-bridge",
+		"LegalCopyright": "Copyright (C) 2026 Eren Belketin",
+		"OriginalFilename": "local-bridge.exe",
+		"ProductName": "Local-Bridge",
+		"ProductVersion": "1.2.1.0"
+	},
+	"VarFileInfo": {
+		"Translation": {
+			"LangID": "0409",
+			"CharSetID": "04B0"
+		}
+	},
+	"IconPath": "app_icon.ico",
+	"ManifestPath": ""
+}
