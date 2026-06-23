@@ -1,6 +1,6 @@
 {
   "name": "local-bridge",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Local Clipboard and File Sharing Bridge (Kendine WhatsApp'tan Mesaj Atma Derdine Son)",
   "main": "server.js",
   "bin": "server.js",
