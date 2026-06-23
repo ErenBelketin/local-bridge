@@ -24,8 +24,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Executable
-        run: npm run build-exe
+      - name: Generate ICO
+        run: node make_ico.js
+
+      - name: Compile Executable
+        run: npx pkg . --targets node18-win-x64 --output local-bridge.exe
+
+      - name: Inject Icon
+        run: node set_icon.js
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
