@@ -30,8 +30,24 @@ jobs:
       - name: Pre-fetch pkg base binary
         run: npx pkg-fetch -t node18-win-x64
 
+      - name: Download rcedit
+        run: curl -L -o rcedit.exe https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe
+
       - name: Patch cached base binary
-        run: node patch_cache.js
+        shell: pwsh
+        run: |
+          $cacheDir = "$env:USERPROFILE\.pkg-cache"
+          $binaries = Get-ChildItem -Path $cacheDir -Filter fetched-* -Recurse -ErrorAction SilentlyContinue
+          if ($binaries.Count -eq 0) {
+            Write-Host "No binaries found in cache."
+            exit 1
+          }
+          foreach ($bin in $binaries) {
+            $builtPath = Join-Path $bin.DirectoryName $bin.Name.Replace("fetched-", "built-")
+            Copy-Item $bin.FullName $builtPath -Force
+            Write-Host "Patching $builtPath with icon..."
+            .\rcedit.exe $builtPath --set-icon app_icon.ico
+          }
 
       - name: Compile Executable
         run: npx pkg . --targets node18-win-x64 --output local-bridge.exe
