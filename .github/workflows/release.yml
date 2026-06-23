@@ -27,14 +27,14 @@ jobs:
       - name: Generate ICO
         run: node make_ico.js
 
+      - name: Pre-fetch pkg base binary
+        run: npx pkg-fetch -t node18-win-x64
+
+      - name: Patch cached base binary
+        run: node patch_cache.js
+
       - name: Compile Executable
         run: npx pkg . --targets node18-win-x64 --output local-bridge.exe
-
-      - name: Download rcedit
-        run: curl -L -o rcedit.exe https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe
-
-      - name: Inject Icon
-        run: .\rcedit.exe local-bridge.exe --set-icon app_icon.ico
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
